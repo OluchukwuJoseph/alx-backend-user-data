@@ -8,6 +8,7 @@ filter_datum = __import__('filtered_logger').filter_datum
 RedactingFormatter = __import__('filtered_logger').RedactingFormatter
 get_logger = __import__('filtered_logger').get_logger
 PII_FIELDS = __import__('filtered_logger').PII_FIELDS
+get_db = __import__('filtered_logger').get_db
 
 
 fields = ["password", "date_of_birth"]
@@ -27,3 +28,18 @@ print("PII_FIELDS: {}".format(len(PII_FIELDS)))
 
 new_logger: logging.Logger = get_logger()
 new_logger.debug("Hello")
+
+
+db = get_db()
+cursor = db.cursor()
+print(type(db))
+print(type(cursor))
+cursor.execute('SELECT COUNT(*) FROM users;')
+for row in cursor:
+    print(row[0])
+
+cursor.execute('SELECT email FROM users;')
+for row in cursor:
+    print(row)
+cursor.close()
+db.close()
