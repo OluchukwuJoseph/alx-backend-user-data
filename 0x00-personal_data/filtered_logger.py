@@ -10,7 +10,7 @@ import os
 import mysql.connector
 
 
-def filter_datum(fields: Union[List, Tuple], redaction: str,
+def filter_datum(fields: List[str], redaction: str,
                  message: str, seperator: str) -> str:
     """ Returns the log message obfuscated """
     new_message: str = re.sub(rf'({"|".join(fields)})=[^{seperator}]+',
