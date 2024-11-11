@@ -3,7 +3,7 @@
 This script contains functions and classes
 for logging user data Redactingly
 """
-from typing import List, Tuple, Union, Dict
+from typing import List, Tuple, Dict
 import re
 import logging
 import os
@@ -29,11 +29,11 @@ class RedactingFormatter(logging.Formatter):
         """ Initializies instance """
         super(RedactingFormatter, self).__init__(self.FORMAT)
         if 'fields' in kwargs:
-            self.fields = kwargs['fields']
+            self.fields: List[str] = kwargs['fields']
 
     def format(self, record: logging.LogRecord) -> str:
         """ Return formatted log record """
-        message = filter_datum(self.fields, self.REDACTION,
+        message: str = filter_datum(self.fields, self.REDACTION,
                                record.msg, self.SEPERATOR)
         record.msg = message
         return super(RedactingFormatter, self).format(record)
