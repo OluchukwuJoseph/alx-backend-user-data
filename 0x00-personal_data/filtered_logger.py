@@ -3,7 +3,7 @@
 This script contains functions and classes
 for logging user data Redactingly
 """
-from typing import List, Tuple, Dict
+from typing import List, Tuple, cast
 import re
 import logging
 import os
@@ -16,9 +16,8 @@ PII_FIELDS: Tuple = ('name', 'ssn', 'password', 'email', 'phone')
 def filter_datum(fields: List[str], redaction: str,
                  message: str, seperator: str) -> str:
     """ Returns the log message obfuscated """
-    new_message = re.sub(rf'({"|".join(fields)})=[^{seperator}]+',
-                         rf'\1={redaction}', message)
-    return new_message
+    return cast(str, re.sub(rf'({"|".join(fields)})=[^{seperator}]+',
+                rf'\1={redaction}', message))
 
 
 class RedactingFormatter(logging.Formatter):
@@ -58,10 +57,10 @@ def get_db() -> mysql.connector.connection.MySQLConnection:
     Returns a connector to a database whose credenials
     was provided through environment variables
     """
-    DB_USERNAME: str = os.getenv('PERSONAL_DATA_DB_USERNAME', 'root')
-    DB_PASSWORD: str = os.getenv('PERSONAL_DATA_DB_PASSWORD', '')
-    DB_HOST: str = os.getenv('PERSONAL_DATA_DB_HOST', 'localhost')
-    DB_NAME: str = os.getenv('PERSONAL_DATA_DB_NAME')
+    DB_USERNAME = os.getenv('PERSONAL_DATA_DB_USERNAME', 'root')
+    DB_PASSWORD = os.getenv('PERSONAL_DATA_DB_PASSWORD', '')
+    DB_HOST = os.getenv('PERSONAL_DATA_DB_HOST', 'localhost')
+    DB_NAME = os.getenv('PERSONAL_DATA_DB_NAME')
 
     db: mysql.connector.connection.MySQLConnection = mysql.connector.connect(
         host=DB_HOST,
