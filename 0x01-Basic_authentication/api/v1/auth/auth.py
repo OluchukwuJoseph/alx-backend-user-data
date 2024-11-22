@@ -71,7 +71,7 @@ class Auth:
         if request is None or request.authorization is None:
             return None
 
-        return request.authorization
+        return str(request.authorization)
 
     def current_user(self, request=None):
         """

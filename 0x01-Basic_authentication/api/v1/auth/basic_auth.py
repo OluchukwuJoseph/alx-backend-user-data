@@ -146,7 +146,7 @@ class BasicAuth(Auth):
 
         authorization_header = self.authorization_header(request)
         base64_authorization_header = self.extract_base64_authorization_header(
-            str(authorization_header))
+            authorization_header)
         decoded_authorization_header = self.decode_base64_authorization_header(
             base64_authorization_header)
         user_credentials = self.extract_user_credentials(
