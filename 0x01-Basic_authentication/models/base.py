@@ -130,7 +130,7 @@ class Base():
             if len(attributes) == 0:
                 return True
             for k, v in attributes.items():
-                if (getattr(obj, k) != v):
+                if getattr(obj, k) != v:
                     return False
             return True
         

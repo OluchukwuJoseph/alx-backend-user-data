@@ -1,2 +1,4 @@
 __pycache__
 .venv
+main*.py
+test*.py

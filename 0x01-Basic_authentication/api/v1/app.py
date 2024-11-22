@@ -25,19 +25,44 @@ elif AUTH_TYPE == 'basic_auth':
 
 @app.before_request
 def before_request():
+    """
+    This function performs the following checks in sequence:
+    1. Validates if authentication is required for the requested path
+    2. Verifies the presence of a valid authorization header
+    3. Confirms the existence of a current user
+
+    Returns:
+        None: If authentication passes or path is excluded
+        Response: 401 if missing/invalid auth header
+                 403 if user not found/unauthorized
+
+    Note:
+        Excluded paths bypass all authentication checks.
+        The function short-circuits and allows the request to proceed if:
+        - auth object is None (authentication disabled)
+        - requested path is in excluded_paths
+    """
+    # Skip all auth checks if authentication is disabled
     if auth is None:
         return
 
+    # Define paths that don't require authentication
     excluded_paths = ['/api/v1/status/',
                       '/api/v1/unauthorized/',
                       '/api/v1/forbidden/']
 
+    # Check if the current path requires authentication
+    # If path is in excluded_paths, allow request to proceed
     if not auth.require_auth(request.path, excluded_paths):
         return
 
+    # Verify authorization header exists
+    # Return 401 Unauthorized if missing or invalid
     if auth.authorization_header(request) is None:
         abort(401)
 
+    # Verify current user exists and has permission
+    # Return 403 Forbidden if user not found or lacks permission
     if auth.current_user(request) is None:
         abort(403)
 
