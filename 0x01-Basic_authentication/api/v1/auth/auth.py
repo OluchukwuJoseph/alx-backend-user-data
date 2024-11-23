@@ -68,10 +68,10 @@ class Auth:
             This method is typically used to extract authentication tokens or
             credentials from the request headers for further processing.
         """
-        if request is None or request.authorization is None:
-            return None
+        if request is not None:
+            return request.headers.get('Authorization', None)
 
-        return str(request.authorization)
+        return None
 
     def current_user(self, request=None):
         """
