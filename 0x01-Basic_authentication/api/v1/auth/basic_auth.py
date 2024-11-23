@@ -114,7 +114,11 @@ class BasicAuth(Auth):
                 user_pwd is None or type(user_pwd) is not str:
             return None
 
-        result = User.search({'email': user_email})
+        try:
+            result = User.search({'email': user_email})
+        except KeyError:
+            return None
+
         if len(result) == 0:
             return None
 

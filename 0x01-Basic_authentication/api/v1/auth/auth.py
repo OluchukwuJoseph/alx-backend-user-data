@@ -37,19 +37,24 @@ class Auth:
                 path = '/api/v1/users' becomes '/api/v1/users/'
                 excluded_paths = ['/api/v1/status'] becomes ['/api/v1/status/']
         """
+        import re
         if excluded_paths is None or len(excluded_paths) == 0 or\
                 path is None or len(path) == 0:
             return True
 
-        if not path.endswith('/'):
-            path += '/'
+        for excluded_path in excluded_paths:
+            if excluded_path.endswith('*'):
+                path_pattern = rf"{excluded_path[:-1]}.*"
+            else:
+                if not path.endswith('/'):
+                    path += '/'
+                if not excluded_path.endswith('/'):
+                    excluded_path += '/'
+                path_pattern = rf"{excluded_path}"
+            if re.match(path_pattern, path):
+                return False
 
-        for idx, excluded_path in enumerate(excluded_paths):
-            if not excluded_path.endswith('/'):
-                excluded_path += '/'
-                excluded_paths[idx] = excluded_path
-
-        return path not in excluded_paths
+        return True
 
     def authorization_header(self, request=None) -> str:
         """
